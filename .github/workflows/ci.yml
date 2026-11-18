@@ -1,0 +1,20 @@
+name: Native and web builds
+on: [push, pull_request]
+jobs:
+  native:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: cmake -S native -B build
+      - run: cmake --build build
+      - run: ctest --test-dir build --output-on-failure
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: {node-version: '22'}
+      - run: npm install
+        working-directory: web
+      - run: npm run build
+        working-directory: web
